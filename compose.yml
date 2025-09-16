@@ -1,15 +1,26 @@
 services:
-    mysql:
-      image: mysql:8.0
-      container_name: tp_mysql
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: rootpassword   # Mot de passe root
-        MYSQL_DATABASE: tp_db               # Nom de la base de données
-        MYSQL_USER: user                    # Utilisateur
-        MYSQL_PASSWORD: userpassword        # Mot de passe de l'utilisateur
-      ports:
-        - "3306:3306"  # Expose le port MySQL
-      volumes:
-        - ./mysql_data:/var/lib/mysql       # Pour persister les données
-        - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Fichier SQL d'initia
+  mysql:
+    image: mysql:8.0
+    container_name: tp_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword # Mot de passe root
+      MYSQL_DATABASE: tp_db # Nom de la base de données
+      MYSQL_USER: user # Utilisateur
+      MYSQL_PASSWORD: userpassword # Mot de passe de l'utilisateur
+    ports:
+      - "3306:3306" # Expose le port MySQL
+    volumes:
+      - ./mysql_data:/var/lib/mysql # Pour persister les données
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Fichier SQL d'initia
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: tp_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql # Connexion au service MySQL
+    ports:
+      - "8080:80" # Expose le port 80 pour accéder à PhpMyAdmin sur localhost:8080
+    depends_on:
+      - mysql
